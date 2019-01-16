@@ -1,11 +1,11 @@
 package se.terhol.pisemka33;
 
+import java.io.Serializable;
+
 /**
- *
  * @author tomp
  */
 public class Student implements Comparable<Student> {
-
     private int uco;
     private String name;
 
@@ -34,7 +34,7 @@ public class Student implements Comparable<Student> {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        return (this.uco == ((Student)obj).uco);
+        return (this.uco == ((Student) obj).uco);
     }
 
     @Override
