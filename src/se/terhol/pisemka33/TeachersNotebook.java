@@ -3,7 +3,6 @@ package se.terhol.pisemka33;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -59,7 +58,7 @@ public class TeachersNotebook implements ITeachersNotebook {
     public void save(File file) throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter(file));
         for (Student student : listOfStudents.keySet()) {
-            writer.write(student.toString() + ":" + this.allMarks(student));
+            writer.write(String.format("%1$s:%2$s", student.toString(), this.allMarks(student)));
             writer.newLine();
             writer.flush();
         }
@@ -70,18 +69,7 @@ public class TeachersNotebook implements ITeachersNotebook {
         BufferedReader reader = new BufferedReader(new FileReader(file));
         String line = reader.readLine();
         while (line != null) {
-            int firstSpace = line.indexOf(' ');
-            int firstColon = line.indexOf(':');
-            int uco = Integer.parseInt(line.substring(0, firstSpace));
-            String name = line.substring(firstSpace + 1, firstColon);
-            Student student = new Student(uco, name);
-            listOfStudents.put(student, new ArrayList<>());
-            for (int i = firstColon + 1; i < line.length(); i++) {
-                if (line.charAt(i) != ' ') {
-                    int markValue = Character.getNumericValue(line.charAt(i));
-                    listOfStudents.get(student).add(new Mark(markValue));
-                }
-            }
+            this.addDataFromString(line);
             line = reader.readLine();
         }
     }
@@ -89,11 +77,26 @@ public class TeachersNotebook implements ITeachersNotebook {
     private String allMarks(Student student) {
         String allMarks = "";
         for (Mark mark : this.getMarks(student))
-            if (allMarks.equals("")) {
+            if ("".equals(allMarks)) {
                 allMarks = mark.toString();
             } else {
-                allMarks = allMarks + " " + mark.toString();
+                allMarks = String.format("%1$s %2$s", allMarks, mark.toString());
             }
         return allMarks;
+    }
+
+    private void addDataFromString(String line) {
+        int firstSpace = line.indexOf(' ');
+        int firstColon = line.indexOf(':');
+        int uco = Integer.parseInt(line.substring(0, firstSpace));
+        String name = line.substring(firstSpace + 1, firstColon);
+        Student student = new Student(uco, name);
+        listOfStudents.put(student, new ArrayList<>());
+        for (int i = firstColon + 1; i < line.length(); i++) {
+            if (line.charAt(i) != ' ') {
+                int markValue = Character.getNumericValue(line.charAt(i));
+                listOfStudents.get(student).add(new Mark(markValue));
+            }
+        }
     }
 }
