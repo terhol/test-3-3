@@ -5,15 +5,13 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 /**
- *
  * @author tomp
  */
 public class Main {
-
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws FileNotFoundException, IOException {
+    public static void main(String[] args) throws IOException {
 
         ITeachersNotebook notebook = new TeachersNotebook();
 
@@ -37,7 +35,7 @@ public class Main {
         notebook.load(new File("notebook.txt"));
 
         System.out.println("Pepa's marks: " + notebook.getMarks(pepa) + " => " + notebook.getFinalMark(pepa));
-        System.out.println("Franta's marks: " + notebook.getMarks(franta)  + " => " + notebook.getFinalMark(franta));
-        System.out.println("Jirka's marks: " + notebook.getMarks(jirka)  + " => " + notebook.getFinalMark(jirka));
+        System.out.println("Franta's marks: " + notebook.getMarks(franta) + " => " + notebook.getFinalMark(franta));
+        System.out.println("Jirka's marks: " + notebook.getMarks(jirka) + " => " + notebook.getFinalMark(jirka));
     }
 }
