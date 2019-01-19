@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -69,7 +70,7 @@ public class TeachersNotebook implements ITeachersNotebook {
         BufferedReader reader = new BufferedReader(new FileReader(file));
         String line = reader.readLine();
         while (line != null) {
-            this.addDataFromString(line);
+            this.parseLine(line);
             line = reader.readLine();
         }
     }
@@ -85,18 +86,29 @@ public class TeachersNotebook implements ITeachersNotebook {
         return allMarks;
     }
 
-    private void addDataFromString(String line) {
-        int firstSpace = line.indexOf(' ');
-        int firstColon = line.indexOf(':');
-        int uco = Integer.parseInt(line.substring(0, firstSpace));
-        String name = line.substring(firstSpace + 1, firstColon);
+    private void parseLine(String line) {
+        int firstSpacePosition = line.indexOf(' ');
+        int firstColonPosition = line.indexOf(':');
+
+        int uco = Integer.parseInt(line.substring(0, firstSpacePosition));
+        String name = line.substring(firstSpacePosition + 1, firstColonPosition);
+
         Student student = new Student(uco, name);
-        listOfStudents.put(student, new ArrayList<>());
-        for (int i = firstColon + 1; i < line.length(); i++) {
+        List<Mark> listOfMarks = extractMarks(line, firstColonPosition);
+
+        listOfStudents.put(student, listOfMarks);
+    }
+
+    private List<Mark> extractMarks(String line, int firstColonPosition) {
+        List<Mark> listOfMarks = new ArrayList<>();
+
+        for (int i = firstColonPosition + 1; i < line.length(); i++) {
             if (line.charAt(i) != ' ') {
                 int markValue = Character.getNumericValue(line.charAt(i));
-                listOfStudents.get(student).add(new Mark(markValue));
+                listOfMarks.add(new Mark(markValue));
             }
         }
+
+        return Collections.unmodifiableList(listOfMarks);
     }
 }
